@@ -27,7 +27,7 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # logs
 log = logger.setup_logger(os.path.join(os.getcwd(), 'experiment_' + str(args.channels) + 'ch_'
-                                             + ('fixed_' if args.fixed else '') + 'log.log'))
+                                       + ('fixed_' if args.fixed else '') + 'log.log'))
 
 for key, value in sorted(vars(args).items()):
     log.info(str(key) + ':' + str(value))
