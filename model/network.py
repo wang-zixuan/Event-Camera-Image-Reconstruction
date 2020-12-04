@@ -88,6 +88,11 @@ class UNet(torch.nn.Module):
             Bottleneck(8)
         ]
 
+        self.down_layers = torch.nn.ModuleList(self.down_layers)
+        self.deconv_layers = torch.nn.ModuleList(self.deconv_layers)
+        self.conv_wo_downsamp = torch.nn.ModuleList(self.conv_wo_downsamp)
+        self.bottleneck_layers = torch.nn.ModuleList(self.bottleneck_layers)
+
     def forward(self, x):
         down_outputs = []
         for down_layer in self.down_layers:
