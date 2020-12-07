@@ -57,7 +57,7 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
 
     """
     Event stack. Here is the example of counting the number of events 
-    and limit the maximum value to 1. In 2-channel condition, we separate
+    and limit the value in the range [-1, 1]. In 2-channel condition, we separate
     the positive and negative events into two channels, which is different
     from other channels.
     """
@@ -70,9 +70,10 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                 line = read1line.seek1line(f, lines, j)
                 if not fixed:
                     pre_images_array[i][int(line[2])][int(line[1])] = \
-                        min(pre_images_array[i][int(line[2])][int(line[1])] + 0.1, 1)
+                        min(pre_images_array[i][int(line[2])][int(line[1])] + 0.1, 1) if int(line[3]) == 1 \
+                        else max(pre_images_array[i][int(line[2])][int(line[1])] - 0.1, -1)
                 else:
-                    pre_images_array[i][int(line[2])][int(line[1])] = 0.5
+                    pre_images_array[i][int(line[2])][int(line[1])] = 0.5 if int(line[3]) == 1 else -0.5
 
     elif channels == 2:
         pre_images_array = np.zeros((int(len(images_lines)), 256, 256, 2), dtype='float16')
@@ -85,12 +86,12 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                             min(pre_images_array[i][int(line[2])][int(line[1])][0] + 0.1, 1)
                     else:
                         pre_images_array[i][int(line[2])][int(line[1])][1] = \
-                            min(pre_images_array[i][int(line[2])][int(line[1])][1] + 0.1, 1)
+                            max(pre_images_array[i][int(line[2])][int(line[1])][1] - 0.1, -1)
                 else:
                     if int(line[3]) == 1:
                         pre_images_array[i][int(line[2])][int(line[1])][0] = 0.5
                     else:
-                        pre_images_array[i][int(line[2])][int(line[1])][1] = 0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][1] = -0.5
 
     else:
         pre_images_array = np.zeros((int(len(images_lines)), 256, 256, channels), dtype='float16')
@@ -108,15 +109,21 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                         """
 
                         pre_images_array[i][int(line[2])][int(line[1])][channels - 1] = \
-                            min(pre_images_array[i][int(line[2])][int(line[1])][channels - 1] + 0.1, 1)
+                            min(pre_images_array[i][int(line[2])][int(line[1])][channels - 1] + 0.1, 1) \
+                            if int(line[3]) == 1 else \
+                            max(pre_images_array[i][int(line[2])][int(line[1])][channels - 1] - 0.1, -1)
                     else:
                         pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] = \
-                            min(pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] + 0.1, 1)
+                            min(pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] + 0.1, 1)\
+                            if int(line[3]) == 1 else \
+                            max(pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] - 0.1, -1)
                 else:
                     if (j - image_label_idx[i]) // incre == channels:
-                        pre_images_array[i][int(line[2])][int(line[1])][channels - 1] = 0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][channels - 1] = 0.5 \
+                            if int(line[3]) == 1 else -0.5
                     else:
-                        pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] = 0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] = 0.5 \
+                            if int(line[3]) == 1 else -0.5
 
     f.close()
     return pre_images_array
@@ -125,7 +132,7 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
 def get_dataset(channels, roots, fixed=False):
     for root in roots:
         post_images_dir = 'data/' + root + '_post.npy'
-        pre_images_dir = 'data/' + root + '_pre_1ch.npy'
+        pre_images_dir = 'data/' + root + '_pre_' + str(channels) + 'ch' + ('_fixed' if fixed else '') + '.npy'
 
         root = 'dataset/' + root + '/'
         images_lines, image_label_idx, post_images_array, lines = aps_image_processing(root)

@@ -38,9 +38,9 @@ class DeconvLayer(torch.nn.Module):
         return out
 
 
-class Bottleneck(torch.nn.Module):
+class ResidualLayer(torch.nn.Module):
     def __init__(self, in_planes):
-        super(Bottleneck, self).__init__()
+        super(ResidualLayer, self).__init__()
         self.bottleneck = torch.nn.Sequential(
             torch.nn.Conv2d(in_channels=in_planes, out_channels=in_planes, kernel_size=1),
             torch.nn.BatchNorm2d(in_planes),
@@ -81,17 +81,17 @@ class UNet(torch.nn.Module):
             ConvLayer(16, 8, down_sample=False)
         ]
 
-        self.bottleneck_layers = [
-            Bottleneck(64),
-            Bottleneck(32),
-            Bottleneck(16),
-            Bottleneck(8)
+        self.residual_layers = [
+            ResidualLayer(64),
+            ResidualLayer(32),
+            ResidualLayer(16),
+            ResidualLayer(8)
         ]
 
         self.down_layers = torch.nn.ModuleList(self.down_layers)
         self.deconv_layers = torch.nn.ModuleList(self.deconv_layers)
         self.conv_wo_downsamp = torch.nn.ModuleList(self.conv_wo_downsamp)
-        self.bottleneck_layers = torch.nn.ModuleList(self.bottleneck_layers)
+        self.residual_layers = torch.nn.ModuleList(self.residual_layers)
 
     def forward(self, x):
         down_outputs = []
@@ -102,8 +102,8 @@ class UNet(torch.nn.Module):
         up_outputs = down_outputs[0]
         for i in range(len(down_outputs) - 1):
             deconv_cur_layer = self.deconv_layers[i](up_outputs)
-            bottleneck_cur_up_layer = self.bottleneck_layers[i](down_outputs[i + 1])
-            concate_cur_layers = torch.cat((deconv_cur_layer, bottleneck_cur_up_layer), dim=1)
+            residual_cur_up_layer = self.residual_layers[i](down_outputs[i + 1])
+            concate_cur_layers = torch.cat((deconv_cur_layer, residual_cur_up_layer), dim=1)
             conv_after_concat = self.conv_wo_downsamp[i](concate_cur_layers)
             up_outputs = conv_after_concat
 
