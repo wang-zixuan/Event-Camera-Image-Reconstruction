@@ -34,16 +34,11 @@ to resume training model from checkpoint (if you had already generated checkpoin
 
 Below is our experiment results.
 
-|   Data    |  SSIM   |   PSNR   |
+|    Data   |   SSIM  |   PSNR   |
 | :-------: | :-----: | :------: |
-|    1ch    | 0.72036 | 23.49299 |
-| 1ch_fixed | 0.69360 | 22.84096 |
-|    2ch    | 0.78091 | 25.30909 |
-| 2ch_fixed | 0.75733 | 24.61221 |
-|    3ch    | 0.74599 | 24.55697 |
-| 3ch_fixed | 0.70617 | 23.34900 |
-
-
-
-
-
+|    1ch    | 0.78505 | 24.95658 |
+| 1ch_fixed | 0.73154 | 23.27854 |
+|    2ch    | 0.79131 | 25.38525 |
+| 2ch_fixed | 0.77254 | 24.66690 |
+|    3ch    | 0.81217 | 23.60319 |
+| 3ch_fixed | 0.75738 | 24.33863 |

@@ -66,6 +66,8 @@ writer = SummaryWriter('runs/eventcamera_experiment_' + str(args.channels) + ('_
 print('Building model done.')
 
 test_output_image = np.zeros((len(test_label), 180, 240), dtype='float')
+if not os.path.exists('result'):
+    os.mkdir('result')
 
 criterion = pytorch_ssim.SSIM(window_size=11)
 optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, weight_decay=0.001)

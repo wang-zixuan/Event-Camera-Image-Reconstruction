@@ -73,7 +73,7 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                         min(pre_images_array[i][int(line[2])][int(line[1])] + 0.1, 1) if int(line[3]) == 1 \
                         else max(pre_images_array[i][int(line[2])][int(line[1])] - 0.1, -1)
                 else:
-                    pre_images_array[i][int(line[2])][int(line[1])] = 0.5 if int(line[3]) == 1 else -0.5
+                    pre_images_array[i][int(line[2])][int(line[1])] = 0.5
 
     elif channels == 2:
         pre_images_array = np.zeros((int(len(images_lines)), 256, 256, 2), dtype='float16')
@@ -86,12 +86,12 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                             min(pre_images_array[i][int(line[2])][int(line[1])][0] + 0.1, 1)
                     else:
                         pre_images_array[i][int(line[2])][int(line[1])][1] = \
-                            max(pre_images_array[i][int(line[2])][int(line[1])][1] - 0.1, -1)
+                            min(pre_images_array[i][int(line[2])][int(line[1])][1] + 0.1, 1)
                 else:
                     if int(line[3]) == 1:
                         pre_images_array[i][int(line[2])][int(line[1])][0] = 0.5
                     else:
-                        pre_images_array[i][int(line[2])][int(line[1])][1] = -0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][1] = 0.5
 
     else:
         pre_images_array = np.zeros((int(len(images_lines)), 256, 256, channels), dtype='float16')
@@ -119,11 +119,9 @@ def peseudo_image_processing(root, images_lines, image_label_idx, lines, channel
                             max(pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] - 0.1, -1)
                 else:
                     if (j - image_label_idx[i]) // incre == channels:
-                        pre_images_array[i][int(line[2])][int(line[1])][channels - 1] = 0.5 \
-                            if int(line[3]) == 1 else -0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][channels - 1] = 0.5
                     else:
-                        pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] = 0.5 \
-                            if int(line[3]) == 1 else -0.5
+                        pre_images_array[i][int(line[2])][int(line[1])][(j - image_label_idx[i]) // incre] = 0.5
 
     f.close()
     return pre_images_array
