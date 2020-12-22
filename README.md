@@ -4,7 +4,7 @@ This is a basic implementation of event camera simulation, just for fun.
 
 Reference: [CVPR19 - Event-Based High Dynamic Range Image and Very High Frame Rate Video Generation Using Conditional Generative Adversarial Networks](https://arxiv.org/pdf/1811.08230.pdf). 
 
-Detailed explanation of model is in the paper (will be uploaded soon). Our model only uses U-Net and residual blocks.
+Detailed explanation of model is in the paper (only available via academic request). Our model only uses U-Net and residual blocks.
 
 ## Requirements
 
