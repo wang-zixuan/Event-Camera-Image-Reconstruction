@@ -1,6 +1,6 @@
 ## About
 
-This is a basic implementation of event camera simulation, just for fun. 
+This is a simple implementation of event camera image reconstruction, just for fun. 
 
 Reference: [CVPR19 - Event-Based High Dynamic Range Image and Very High Frame Rate Video Generation Using Conditional Generative Adversarial Networks](https://arxiv.org/pdf/1811.08230.pdf). 
 
